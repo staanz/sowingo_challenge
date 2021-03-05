@@ -1,0 +1,91 @@
+#!/bin/bash
+
+#
+#:copyright: (c) 2020 by Sowingo.com Corp.
+#
+
+function blink () {
+    echo -n '[5m'"$@"'[0m'
+}
+
+function italics () {
+    echo -n '[3m'"$@"'[0m'
+}
+
+function underline () {
+    echo -n '[4m'"$@"'[0m'
+}
+
+function highlight () {
+    echo -n '[31;1;7m'"$@"'[0m'
+}
+
+function prod_prompt () {
+    echo "$(blink $(highlight "¡WARNING!")) You are attempting to run on $(underline "PRODUCTION")."
+    echo
+    echo "Do you really run on $(underline PRODUCTION)?"
+    select yn in "Yes" "No"; do
+        case $yn in
+            Yes)
+                # echo "$@"
+                echo
+                run "$@"
+                break
+                ;;
+            No)
+                echo Aborting...
+                exit
+                ;;
+        esac
+    done
+}
+
+function run () {
+    echo "> $@"
+    echo
+    "$@"
+}
+
+if [ -f "$PWD/scripts/run" ]; then
+    ENVDIR="."
+    PYTHONPATH="."
+else
+    ABSPATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+    ABSPATH="$(dirname "$ABSPATH")/.."
+    PYTHONPATH="$ABSPATH"
+    ENVDIR="$ABSPATH"
+fi
+
+ENV=$1
+
+#
+# Run on production
+#
+if [ "$ENV" = "prod" ]; then
+    shift
+    prod_prompt honcho run -e "$ENVDIR/.env" -e "$ENVDIR/.env.prod" env PYTHONPATH="$PYTHONPATH" "$@"
+#
+# Run on staging
+#
+elif [ "$ENV" = "staging" ]; then
+    shift
+    run honcho run -e "$ENVDIR/.env" -e "$ENVDIR/.env.staging" env PYTHONPATH="$PYTHONPATH" "$@"
+#
+# Run on Demo
+#
+elif [ "$ENV" = "demo" ]; then
+    shift
+    run honcho run -e "$ENVDIR/.env" -e "$ENVDIR/.env.demo" env PYTHONPATH="$PYTHONPATH" "$@"
+
+#
+# Run other defined environments
+#
+elif [ -f "$ENVDIR/.env.$ENV" ]; then
+    shift
+    run honcho run -e "$ENVDIR/.env" -e "$ENVDIR/.env.$ENV" env PYTHONPATH="$PYTHONPATH" "$@"
+#
+# Fallback to default (local dev)
+#
+else
+    run honcho run env PYTHONPATH="$PYTHONPATH" "$@"
+fi
