@@ -1,15 +1,9 @@
-# -*- coding: utf-8 -*-
-"""Sowingo Micrservices Template - Sample Module Services.
-
-:copyright: (c) 2020 by Sowingo.com Corp.
-"""
-
 import logging
 
-from .constants import USER_AUTH_NAME
+from .constants import VACATIONS_NAME
 
 
-class UserAuthService(object):
+class VacationsService(object):
     """A collection of services implemented by the sample module which can be
     accessed via Flask current_app's service registry.
 
@@ -24,7 +18,7 @@ class UserAuthService(object):
         """
         self.logger = logging.getLogger(__name__)
         self.logger.debug("Initializing Services for module - %s"
-                          % (USER_AUTH_NAME)
+                          % (VACATIONS_NAME)
                           )
 
     def send_response(self):
@@ -36,12 +30,7 @@ class UserAuthService(object):
         NOTE: THIS IS JUST A SAMPLE. THIS HAS NO REAL WORLD USE.
         """
 
-        # response = response if response else {
-        #     "message" : "This is a sample response from the %s"
-        #     % (VACATION_REQUESTS_NAME),
-        # }
-
         return {
             "message": "This is a sample response from the %s"
-                       % (USER_AUTH_NAME),
+                       % (VACATIONS_NAME),
         }

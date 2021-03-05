@@ -93,6 +93,7 @@ class Model(db.Model, BaseModelMixin):
 
 class User(db.Model, BaseModelMixin):
     """ User Table
+    This class defined the users table and all the class related methods and logic
     """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -101,12 +102,27 @@ class User(db.Model, BaseModelMixin):
     permission_class = db.Column(db.String, nullable=False, default='employee')
 
     def vacations(self):
+        """ returns this employee's vacation requests;
+        Vacation query WHERE Vacation.requester_id = User.id
+        """
         return Vacation.query.filter_by(requester_id=self.id)
 
     def check_vacation_remaining(self, start=None, end=None):
+        """
+        Checks how many vacation days the employee has remaining
+        from the annual allowable 30 days limit, based on pending
+        and approved vacation requests.
+
+        NOTE: for simplicity of the exercise, not including the logic
+        to check if the used days is across a 1-yr time period. It only
+        checks if the total used thus far is <= 30
+
+        Also checks during new request if the total used + new request
+        will exceed 30 and returns by how much it will exceed
+        """
         days_used = 0
         if start and end:
-            request_duration = (datetime.strptime(end, '%Y-%m-%d') - datetime.strptime(start, '%Y-%m-%d')).days
+            request_duration = (end - start).days
         else:
             request_duration = 0
         vacations = self.vacations().filter(Vacation.status.in_(['approved', 'pending']))
@@ -122,6 +138,7 @@ class User(db.Model, BaseModelMixin):
 
 class Vacation(db.Model, BaseModelMixin):
     """Vacation table
+    This class defined the vacations table and all the class related methods and logic
     """
     __tablename__ = 'vacations'
     id = db.Column(db.Integer, primary_key=True)
@@ -142,15 +159,28 @@ class Vacation(db.Model, BaseModelMixin):
         # return 'this is the model'
 
     def requester(self):
+        """
+        Returns the user object (employee) that created this vacation request
+        """
         return User.find_by_id(self.requester_id)
 
     def validator(self):
-        return User.find_by_id(self.validator_id)
+        """
+        Returns the user obect (manager) that validated this vacation request.
+        For requests that are still pending, this will not return anything
+        """
+        return User.find_by_id(self.validator_id) if self.validator_id else None
 
     def duration(self):
+        """
+        Returns the number of days in this vacation request
+        """
         return (self.vacation_end - self.vacation_start).days + 1
 
     def period(self):
+        """
+        A string representation of the start and end of this vacation
+        """
         start = datetime.strftime(self.vacation_start, '%Y-%m-%d')
         end = datetime.strftime(self.vacation_end, '%Y-%m-%d')
         return start + ' to ' + end
@@ -159,11 +189,18 @@ class Vacation(db.Model, BaseModelMixin):
 
 
 class UserSchema(ma.Schema):
+    """
+    Structure for User serialization.
+    For simplicity, this is only used to dump model object, therefore, password excluded
+    """
     class Meta:
         fields = ('id', 'email', 'permission_class')
 
 
 class VacationSchema(ma.Schema):
+    """
+    Structure for Vacation serialization
+    """
     class Meta:
         fields = (
             'id', 'vacation_start', 'vacation_end', 'status', 'requester_id',

@@ -2,15 +2,15 @@ import flask
 import six
 from flask_restful import Api
 
-from .resources import user_auth_api
+from .resources import users_api
 from .services import UserAuthService
 
 ROUTES = {
-    '/': user_auth_api.UserViewAPI,
-    '/login': user_auth_api.UserLoginAPI,
-    '/signup': user_auth_api.UserSignUpAPI,
-    # '/logout': 'log out route',
-    # '/profile': 'user profile route'
+    '/': users_api.UserViewAPI,
+    '/login': users_api.UserLoginAPI,
+    '/signup': users_api.UserSignUpAPI,
+    # '/logout': 'log out route',  # TODO: For future implementation
+    # '/profile': 'user profile route'  # TODO: For future implementation
 }
 
 

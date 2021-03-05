@@ -1,9 +1,15 @@
+# -*- coding: utf-8 -*-
+"""Sowingo Micrservices Template - (cloned from) Sample Module Services.
+
+:copyright: (c) 2020 by Sowingo.com Corp.
+"""
+
 import logging
 
-from .constants import VACATION_VALIDATE_NAME
+from .constants import USERS_NAME
 
 
-class VacationValidateService(object):
+class UserAuthService(object):
     """A collection of services implemented by the sample module which can be
     accessed via Flask current_app's service registry.
 
@@ -18,7 +24,7 @@ class VacationValidateService(object):
         """
         self.logger = logging.getLogger(__name__)
         self.logger.debug("Initializing Services for module - %s"
-                          % (VACATION_VALIDATE_NAME)
+                          % (USERS_NAME)
                           )
 
     def send_response(self):
@@ -29,8 +35,7 @@ class VacationValidateService(object):
 
         NOTE: THIS IS JUST A SAMPLE. THIS HAS NO REAL WORLD USE.
         """
-
         return {
             "message": "This is a sample response from the %s"
-                       % (VACATION_VALIDATE_NAME),
+                       % (USERS_NAME),
         }

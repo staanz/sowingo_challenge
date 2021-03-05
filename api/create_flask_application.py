@@ -36,9 +36,8 @@ EXTENSIONS = [
 
 MODULES = [
     'api.sample_module',
-    'api.user_auth',
-    'api.vacation_request',
-    'api.vacation_validate'
+    'api.users',
+    'api.vacations',
 ]
 
 
