@@ -10,7 +10,6 @@ via uwsgi.
 """
 
 import logging
-
 import flask
 import importlib
 from flask_migrate import Migrate, MigrateCommand
