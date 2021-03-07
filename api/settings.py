@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 #
 optional = lambda key, default=None: os.environ.get(key, default)
 
+
 def required(key):
     """A helper which checks for presence of a key in the environment, if not
     raises a KeyError.
@@ -39,7 +40,7 @@ def required(key):
         sys.exit(-1)
 
 
-SQLALCHEMY_DATABASE_URI = required('DATABASE_URI')
+SQLALCHEMY_DATABASE_URI = required('DATABASE_URL')
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 DEFAULT_LOG_LEVEL = optional('DEFAULT_LOG_LEVEL', 'DEBUG')
 PORT = required('PORT')
