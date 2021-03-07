@@ -38,7 +38,7 @@ def required(key):
                      .format(key))
         sys.exit(-1)
 
-SQLALCHEMY_DATABASE_URI = required('SQLALCHEMY_DATABASE_URI')
+SQLALCHEMY_DATABASE_URI = required('DATABASE_URI')
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 DEFAULT_LOG_LEVEL = optional('DEFAULT_LOG_LEVEL', 'DEBUG')
 PORT = required('PORT')
