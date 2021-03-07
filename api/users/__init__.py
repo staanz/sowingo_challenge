@@ -3,7 +3,7 @@ import six
 from flask_restful import Api
 
 from .resources import users_api
-from .services import UserAuthService
+from .services import UsersService
 
 ROUTES = {
     '/': users_api.UserViewAPI,
@@ -15,13 +15,13 @@ ROUTES = {
 
 
 def init(app):
-    blueprint = flask.Blueprint('user_auth', __name__,
-                                url_prefix='/user_auth')
+    blueprint = flask.Blueprint('users', __name__,
+                                url_prefix='/users')
     api = Api(blueprint)
 
     for pattern, endpoint in six.iteritems(ROUTES):
         api.add_resource(endpoint, pattern)
 
     app.register_blueprint(blueprint)
-    app.services.register_service('user_auth_service',
-                                  UserAuthService())
+    app.services.register_service('users_service',
+                                  UsersService())

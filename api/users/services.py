@@ -9,7 +9,7 @@ import logging
 from .constants import USERS_NAME
 
 
-class UserAuthService(object):
+class UsersService(object):
     """A collection of services implemented by the sample module which can be
     accessed via Flask current_app's service registry.
 
